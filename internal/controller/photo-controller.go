@@ -28,7 +28,14 @@ func CreatePhoto(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusCreated, result)
+	context.JSON(http.StatusCreated, gin.H{
+		"id":         result.ID,
+		"title":      result.Title,
+		"caption":    result.Caption,
+		"photo_url":  result.PhotoURL,
+		"user_id":    result.UserID,
+		"created_at": result.CreatedAt,
+	})
 }
 
 func UpdatePhoto(context *gin.Context) {
@@ -39,15 +46,22 @@ func UpdatePhoto(context *gin.Context) {
 		return
 	}
 
-	productIDInt, _ := strconv.Atoi(context.Param("productId"))
-	productID := uint(productIDInt)
+	photoIDInt, _ := strconv.Atoi(context.Param("photoId"))
+	photoID := uint(photoIDInt)
 
-	result, err := service.PhotoService.UpdatePhoto(&photo, productID)
+	result, err := service.PhotoService.UpdatePhoto(&photo, photoID)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	context.JSON(http.StatusOK, result)
+	context.JSON(http.StatusOK, gin.H{
+		"id":         result.ID,
+		"title":      result.Title,
+		"caption":    result.Caption,
+		"photo_url":  result.PhotoURL,
+		"user_id":    result.UserID,
+		"updated_at": result.CreatedAt,
+	})
 }

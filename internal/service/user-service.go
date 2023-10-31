@@ -33,14 +33,7 @@ func (t *userService) Register(user *model.User) (*model.User, error) {
 		return nil, err
 	}
 
-	response := &model.User{
-		ID:       result.ID,
-		Username: result.Username,
-		Age:      result.Age,
-		Email:    result.Email,
-	}
-
-	return response, nil
+	return result, nil
 }
 
 func (t *userService) Login(login *model.LoginCredential) (string, error) {
@@ -57,7 +50,7 @@ func (t *userService) Login(login *model.LoginCredential) (string, error) {
 		return "", err
 	}
 
-	token, err := helper.GenerateToken(user.ID, user.Username)
+	token, err := helper.GenerateToken(user.ID, user.Email)
 	if err != nil {
 		return "", err
 	}

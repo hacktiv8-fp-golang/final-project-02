@@ -10,10 +10,10 @@ import (
 
 var secretKey = "seed"
 
-func GenerateToken(id uint, username string) (string, error) {
+func GenerateToken(id uint, email string) (string, error) {
 	claims := jwt.MapClaims{
 		"id":    id,
-		"username": username,
+		"email": email,
 	}
 
 	parseToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

@@ -30,7 +30,7 @@ func (t *userModel) Login(login *model.LoginCredential) (*model.User, error) {
 	db := database.GetDB()
 
 	var user model.User
-	err := db.Where("username = ?", login.Username).First(&user).Error
+	err := db.Where("email = ?", login.Email).First(&user).Error
 
 	if err != nil {
 		return nil, err

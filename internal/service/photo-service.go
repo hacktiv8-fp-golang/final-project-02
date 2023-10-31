@@ -28,16 +28,7 @@ func (t *photoService) CreatePhoto(photo *model.Photo, userID uint) (*model.Phot
 		return nil, err
 	}
 
-	response := &model.Photo{
-		ID:        result.ID,
-		Title:     result.Title,
-		Caption:   result.Caption,
-		PhotoURL:  result.PhotoURL,
-		UserID:    result.UserID,
-		CreatedAt: result.CreatedAt,
-	}
-
-	return response, nil
+	return result, nil
 }
 
 func (t *photoService) UpdatePhoto(photo *model.PhotoUpdate, photoID uint) (*model.Photo, error) {
@@ -50,14 +41,5 @@ func (t *photoService) UpdatePhoto(photo *model.PhotoUpdate, photoID uint) (*mod
 		return nil, err
 	}
 
-	response := &model.Photo{
-		ID:        result.ID,
-		Title:     result.Title,
-		Caption:   result.Caption,
-		PhotoURL:  result.PhotoURL,
-		UserID:    result.UserID,
-		CreatedAt: result.CreatedAt,
-	}
-
-	return response, nil
+	return result, nil
 }
