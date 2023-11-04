@@ -12,7 +12,7 @@ import (
 
 func PhotoAuthorization() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		productID, err := strconv.Atoi(context.Param("productId"))
+		photoId, err := strconv.Atoi(context.Param("photoId"))
 		if err != nil {
 			context.JSON(http.StatusBadRequest, err.Error())
 			return
@@ -24,7 +24,7 @@ func PhotoAuthorization() gin.HandlerFunc {
 		db := database.GetDB()
 		photo := model.Photo{}
 
-		err = db.Select("user_id").First(&photo, uint(productID)).Error
+		err = db.Select("user_id").First(&photo, uint(photoId)).Error
 		if err != nil {
 			context.JSON(http.StatusNotFound, err.Error())
 			return

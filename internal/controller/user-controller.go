@@ -23,7 +23,12 @@ func Register(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusCreated, result)
+	context.JSON(http.StatusCreated, gin.H{
+		"id":       result.ID,
+		"username": result.Username,
+		"age":      result.Age,
+		"email":    result.Email,
+	})
 }
 
 func Login(context *gin.Context) {
