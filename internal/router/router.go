@@ -24,7 +24,7 @@ func StartServer() {
 	{
 		photoRouter.Use(middleware.Authentication())
 		photoRouter.POST("/", controller.CreatePhoto)
-		photoRouter.GET("/")
+		photoRouter.GET("/", controller.GetAllPhotos)
 		photoRouter.PUT("/:photoId", middleware.PhotoAuthorization(), controller.UpdatePhoto)
 		photoRouter.DELETE("/:photoId")
 	}

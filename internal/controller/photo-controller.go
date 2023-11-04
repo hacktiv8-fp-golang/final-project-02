@@ -65,3 +65,34 @@ func UpdatePhoto(context *gin.Context) {
 		"updated_at": result.CreatedAt,
 	})
 }
+
+func GetAllPhotos(context *gin.Context) {
+	photos, err := service.PhotoService.GetAllPhotos()
+
+	if err != nil {
+		context.JSON(http.StatusNotFound, err.Error())
+		return
+	}
+
+	var photoMaps []map[string]interface{}
+
+	for _, photo := range photos {
+		photoMap := map[string]interface{}{
+			"id":         photo.ID,
+			"title":      photo.Title,
+			"caption":    photo.Caption,
+			"photo_url":  photo.PhotoURL,
+			"user_id":    photo.UserID,
+			"created_at": photo.CreatedAt,
+			"updated_at": photo.UpdatedAt,
+			"User": 			map[string]interface{}{
+				"email":    photo.User.Email,
+				"username": photo.User.Username,
+			},
+		}
+		
+		photoMaps = append(photoMaps, photoMap)
+	}
+
+	context.JSON(http.StatusOK, photoMaps)
+}

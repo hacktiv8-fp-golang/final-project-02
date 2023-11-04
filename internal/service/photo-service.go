@@ -10,6 +10,7 @@ import (
 type photoServiceRepo interface {
 	CreatePhoto(*model.Photo, uint) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
+	GetAllPhotos() ([]*model.Photo, error)
 }
 
 type photoService struct{}
@@ -42,4 +43,14 @@ func (t *photoService) UpdatePhoto(photo *model.PhotoUpdate, photoID uint) (*mod
 	}
 
 	return result, nil
+}
+
+func (p *photoService) GetAllPhotos() ([]*model.Photo, error) {
+	photos, err := repository.PhotoModel.GetAllPhotos()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return photos, nil
 }
