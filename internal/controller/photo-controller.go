@@ -73,7 +73,7 @@ func GetAllPhotos(context *gin.Context) {
 	photos, err := service.PhotoService.GetAllPhotos(userId)
 
 	if err != nil {
-		context.JSON(http.StatusNotFound, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 

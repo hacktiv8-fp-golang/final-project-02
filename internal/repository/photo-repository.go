@@ -3,12 +3,13 @@ package repository
 import (
 	"final-project-02/internal/database"
 	"final-project-02/internal/model"
+	"final-project-02/internal/utils"
 )
 
 type photoModelRepo interface {
 	CreatePhoto(*model.Photo) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
-	GetAllPhotos(uint) ([]*model.Photo, error)
+	GetAllPhotos(uint) ([]*model.Photo, utils.Error)
 	DeletePhoto(uint) (error)
 }
 
@@ -43,14 +44,14 @@ func (t *photoModel) UpdatePhoto(input *model.PhotoUpdate, photoID uint) (*model
 	return &photo, nil
 }
 
-func (p *photoModel) GetAllPhotos(userId uint) ([]*model.Photo, error) {
+func (p *photoModel) GetAllPhotos(userId uint) ([]*model.Photo, utils.Error) {
 	db := database.GetDB()
 	var photos []*model.Photo
 
 	err := db.Preload("User").Where("user_id = ?", userId).Find(&photos).Error
 
 	if err != nil {
-		return nil, err
+		return nil, utils.ParseError(err)
 	}
 
 	return photos, nil
