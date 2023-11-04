@@ -90,9 +90,31 @@ func GetAllPhotos(context *gin.Context) {
 				"username": photo.User.Username,
 			},
 		}
-		
+
 		photoMaps = append(photoMaps, photoMap)
 	}
 
 	context.JSON(http.StatusOK, photoMaps)
+}
+
+func DeletePhoto(context *gin.Context) {
+	photoId, err := strconv.Atoi(context.Param("photoId"))
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Photo id must be an integer",})
+		return
+	}
+
+	photoIdParsed := uint(photoId)
+
+	err = service.PhotoService.DeletePhoto(photoIdParsed)
+
+	if err != nil {
+		context.JSON(http.StatusNotFound, err.Error())
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Your photo has been successfully deleted",
+	})
 }

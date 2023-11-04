@@ -26,7 +26,7 @@ func StartServer() {
 		photoRouter.POST("/", controller.CreatePhoto)
 		photoRouter.GET("/", controller.GetAllPhotos)
 		photoRouter.PUT("/:photoId", middleware.PhotoAuthorization(), controller.UpdatePhoto)
-		photoRouter.DELETE("/:photoId")
+		photoRouter.DELETE("/:photoId", middleware.PhotoAuthorization(), controller.DeletePhoto)
 	}
 
 	commentRouter := router.Group("/comments")

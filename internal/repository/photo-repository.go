@@ -9,6 +9,7 @@ type photoModelRepo interface {
 	CreatePhoto(*model.Photo) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
 	GetAllPhotos() ([]*model.Photo, error)
+	DeletePhoto(uint) (error)
 }
 
 type photoModel struct{}
@@ -53,4 +54,24 @@ func (p *photoModel) GetAllPhotos() ([]*model.Photo, error) {
 	}
 
 	return photos, nil
+}
+
+func (p *photoModel) DeletePhoto(photoId uint) error {
+	db := database.GetDB()
+
+	var photo model.Photo
+
+	err := db.First(&photo, photoId).Error
+
+	if err != nil {
+		return err
+	}
+
+	err = db.Delete(&photo).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

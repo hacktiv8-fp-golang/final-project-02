@@ -11,6 +11,7 @@ type photoServiceRepo interface {
 	CreatePhoto(*model.Photo, uint) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
 	GetAllPhotos() ([]*model.Photo, error)
+	DeletePhoto(uint) error
 }
 
 type photoService struct{}
@@ -53,4 +54,14 @@ func (p *photoService) GetAllPhotos() ([]*model.Photo, error) {
 	}
 
 	return photos, nil
+}
+
+func (p *photoService) DeletePhoto(photoId uint) error {
+	err := repository.PhotoModel.DeletePhoto(photoId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
