@@ -67,7 +67,10 @@ func UpdatePhoto(context *gin.Context) {
 }
 
 func GetAllPhotos(context *gin.Context) {
-	photos, err := service.PhotoService.GetAllPhotos()
+	userData := context.MustGet("userData").(jwt.MapClaims)
+	userId := uint(userData["id"].(float64))
+
+	photos, err := service.PhotoService.GetAllPhotos(userId)
 
 	if err != nil {
 		context.JSON(http.StatusNotFound, err.Error())

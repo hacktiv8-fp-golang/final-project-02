@@ -10,7 +10,7 @@ import (
 type photoServiceRepo interface {
 	CreatePhoto(*model.Photo, uint) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
-	GetAllPhotos() ([]*model.Photo, error)
+	GetAllPhotos(uint) ([]*model.Photo, error)
 	DeletePhoto(uint) error
 }
 
@@ -46,8 +46,8 @@ func (t *photoService) UpdatePhoto(photo *model.PhotoUpdate, photoID uint) (*mod
 	return result, nil
 }
 
-func (p *photoService) GetAllPhotos() ([]*model.Photo, error) {
-	photos, err := repository.PhotoModel.GetAllPhotos()
+func (p *photoService) GetAllPhotos(userId uint) ([]*model.Photo, error) {
+	photos, err := repository.PhotoModel.GetAllPhotos(userId)
 
 	if err != nil {
 		return nil, err
