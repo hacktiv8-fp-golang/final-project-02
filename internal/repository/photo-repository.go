@@ -10,7 +10,7 @@ type photoModelRepo interface {
 	CreatePhoto(*model.Photo) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
 	GetAllPhotos(uint) ([]*model.Photo, utils.Error)
-	DeletePhoto(uint) (error)
+	DeletePhoto(uint) (utils.Error)
 }
 
 type photoModel struct{}
@@ -57,21 +57,15 @@ func (p *photoModel) GetAllPhotos(userId uint) ([]*model.Photo, utils.Error) {
 	return photos, nil
 }
 
-func (p *photoModel) DeletePhoto(photoId uint) error {
+func (p *photoModel) DeletePhoto(photoId uint) utils.Error {
 	db := database.GetDB()
 
 	var photo model.Photo
 
-	err := db.First(&photo, photoId).Error
-
+	err := db.Where("id = ?", photoId).Delete(&photo).Error
+	
 	if err != nil {
-		return err
-	}
-
-	err = db.Delete(&photo).Error
-
-	if err != nil {
-		return err
+		return utils.ParseError(err)
 	}
 
 	return nil

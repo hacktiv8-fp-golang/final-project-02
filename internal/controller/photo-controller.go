@@ -3,6 +3,7 @@ package controller
 import (
 	"final-project-02/internal/model"
 	"final-project-02/internal/service"
+	"final-project-02/internal/utils"
 	"net/http"
 	"strconv"
 
@@ -101,19 +102,12 @@ func GetAllPhotos(context *gin.Context) {
 }
 
 func DeletePhoto(context *gin.Context) {
-	photoId, err := strconv.Atoi(context.Param("photoId"))
+	id, _ := utils.GetIdParam(context, "photoId")
+
+	err := service.PhotoService.DeletePhoto(id)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Photo id must be an integer",})
-		return
-	}
-
-	photoIdParsed := uint(photoId)
-
-	err = service.PhotoService.DeletePhoto(photoIdParsed)
-
-	if err != nil {
-		context.JSON(http.StatusNotFound, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 
