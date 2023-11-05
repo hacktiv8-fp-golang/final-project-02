@@ -39,7 +39,8 @@ func StartServer() {
 
 	socialMediaRouter := router.Group("/socialmedias")
 	{
-		socialMediaRouter.POST("/")
+		socialMediaRouter.Use(middleware.Authentication())
+		socialMediaRouter.POST("/", controller.CreateSocialMedia)
 		socialMediaRouter.GET("/")
 		socialMediaRouter.PUT("/:socialMediaId")
 		socialMediaRouter.DELETE("/:socialMediaId")
