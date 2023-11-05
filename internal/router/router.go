@@ -41,7 +41,7 @@ func StartServer() {
 	{
 		socialMediaRouter.Use(middleware.Authentication())
 		socialMediaRouter.POST("/", controller.CreateSocialMedia)
-		socialMediaRouter.GET("/")
+		socialMediaRouter.GET("/", controller.GetAllSocialMedias)
 		socialMediaRouter.PUT("/:socialMediaId")
 		socialMediaRouter.DELETE("/:socialMediaId")
 	}

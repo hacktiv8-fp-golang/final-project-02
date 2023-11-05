@@ -39,3 +39,39 @@ func CreateSocialMedia(context *gin.Context) {
 		"created_at": socialMediaResponse.CreatedAt,
 	})
 }
+
+func GetAllSocialMedias(context *gin.Context) {
+	userData := context.MustGet("userData").(jwt.MapClaims)
+	userId := uint(userData["id"].(float64))
+
+	socialMedias, err := service.SocialMediaService.GetAllSocialMedias(userId)
+
+	if err != nil {
+		context.JSON(err.Status(), err)
+		return
+	}
+
+	var socialMediaMaps []map[string]interface{}
+
+	for _, socialMedia := range socialMedias {
+		socialMediaMap := map[string]interface{}{
+			"id": socialMedia.ID,
+			"name": socialMedia.Name,
+			"social_media_url": socialMedia.SocialMediaURL,
+			"user_id": socialMedia.UserID,
+			"created_at": socialMedia.CreatedAt,
+			"updated_at": socialMedia.UpdatedAt,
+			"user": map[string]interface{}{
+				"id": socialMedia.User.ID,
+				"email": socialMedia.User.Email,
+				"username": socialMedia.User.Username,
+			},
+		}
+
+		socialMediaMaps = append(socialMediaMaps, socialMediaMap)
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"social_medias": socialMediaMaps,
+	})
+}

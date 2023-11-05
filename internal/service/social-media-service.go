@@ -8,6 +8,7 @@ import (
 
 type socialMediaServiceRepo interface {
 	CreateSocialMedia(*model.SocialMedia) (*model.SocialMedia, utils.Error)
+	GetAllSocialMedias(uint) ([]*model.SocialMedia, utils.Error)
 }
 
 type socialMediaService struct{}
@@ -28,4 +29,14 @@ func (s *socialMediaService) CreateSocialMedia(socialMedia *model.SocialMedia) (
 	}
 
 	return socialMediaResponse, nil
+}
+
+func (s *socialMediaService) GetAllSocialMedias(userId uint) ([]*model.SocialMedia, utils.Error) {
+	socialMedias, err := repository.SocialMediaRepo.GetAllSocialMedias(userId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return socialMedias, nil
 }
