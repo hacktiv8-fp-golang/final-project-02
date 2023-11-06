@@ -3,7 +3,7 @@ package service
 import (
 	"final-project-02/internal/model"
 	"final-project-02/internal/repository"
-	"final-project-02/internal/utils"
+	"final-project-02/internal/helper"
 
 	"github.com/asaskevich/govalidator"
 )
@@ -11,8 +11,8 @@ import (
 type photoServiceRepo interface {
 	CreatePhoto(*model.Photo, uint) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
-	GetAllPhotos(uint) ([]*model.Photo, utils.Error)
-	DeletePhoto(uint) utils.Error
+	GetAllPhotos(uint) ([]*model.Photo, helper.Error)
+	DeletePhoto(uint) helper.Error
 }
 
 type photoService struct{}
@@ -47,7 +47,7 @@ func (t *photoService) UpdatePhoto(photo *model.PhotoUpdate, photoID uint) (*mod
 	return result, nil
 }
 
-func (p *photoService) GetAllPhotos(userId uint) ([]*model.Photo, utils.Error) {
+func (p *photoService) GetAllPhotos(userId uint) ([]*model.Photo, helper.Error) {
 	photos, err := repository.PhotoModel.GetAllPhotos(userId)
 
 	if err != nil {
@@ -57,7 +57,7 @@ func (p *photoService) GetAllPhotos(userId uint) ([]*model.Photo, utils.Error) {
 	return photos, nil
 }
 
-func (p *photoService) DeletePhoto(photoId uint) utils.Error {
+func (p *photoService) DeletePhoto(photoId uint) helper.Error {
 	err := repository.PhotoModel.DeletePhoto(photoId)
 
 	if err != nil {

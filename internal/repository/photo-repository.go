@@ -3,14 +3,14 @@ package repository
 import (
 	"final-project-02/internal/database"
 	"final-project-02/internal/model"
-	"final-project-02/internal/utils"
+	"final-project-02/internal/helper"
 )
 
 type photoModelRepo interface {
 	CreatePhoto(*model.Photo) (*model.Photo, error)
 	UpdatePhoto(*model.PhotoUpdate, uint) (*model.Photo, error)
-	GetAllPhotos(uint) ([]*model.Photo, utils.Error)
-	DeletePhoto(uint) (utils.Error)
+	GetAllPhotos(uint) ([]*model.Photo, helper.Error)
+	DeletePhoto(uint) (helper.Error)
 }
 
 type photoModel struct{}
@@ -44,20 +44,20 @@ func (t *photoModel) UpdatePhoto(input *model.PhotoUpdate, photoID uint) (*model
 	return &photo, nil
 }
 
-func (p *photoModel) GetAllPhotos(userId uint) ([]*model.Photo, utils.Error) {
+func (p *photoModel) GetAllPhotos(userId uint) ([]*model.Photo, helper.Error) {
 	db := database.GetDB()
 	var photos []*model.Photo
 
 	err := db.Preload("User").Where("user_id = ?", userId).Find(&photos).Error
 
 	if err != nil {
-		return nil, utils.ParseError(err)
+		return nil, helper.ParseError(err)
 	}
 
 	return photos, nil
 }
 
-func (p *photoModel) DeletePhoto(photoId uint) utils.Error {
+func (p *photoModel) DeletePhoto(photoId uint) helper.Error {
 	db := database.GetDB()
 
 	var photo model.Photo
@@ -65,7 +65,7 @@ func (p *photoModel) DeletePhoto(photoId uint) utils.Error {
 	err := db.Where("id = ?", photoId).Delete(&photo).Error
 	
 	if err != nil {
-		return utils.ParseError(err)
+		return helper.ParseError(err)
 	}
 
 	return nil

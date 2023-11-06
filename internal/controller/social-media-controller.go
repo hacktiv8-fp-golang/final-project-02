@@ -3,7 +3,7 @@ package controller
 import (
 	"final-project-02/internal/model"
 	"final-project-02/internal/service"
-	"final-project-02/internal/utils"
+	"final-project-02/internal/helper"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
@@ -14,7 +14,7 @@ func CreateSocialMedia(context *gin.Context) {
 	var socialMedia model.SocialMedia
 
 	if err := context.ShouldBindJSON(&socialMedia); err != nil {
-		err := utils.UnprocessibleEntity("Invalid JSON body")
+		err := helper.UnprocessibleEntity("Invalid JSON body")
 		context.JSON(err.Status(), err)
 		return
 	}
@@ -77,12 +77,12 @@ func GetAllSocialMedias(context *gin.Context) {
 }
 
 func UpdateSocialMedia(context *gin.Context) {
-	id, _ := utils.GetIdParam(context, "socialMediaId")
+	id, _ := helper.GetIdParam(context, "socialMediaId")
 
 	var socialMediaUpdated model.SocialMediaUpdate
 
 	if err := context.ShouldBindJSON(&socialMediaUpdated); err != nil {
-		err := utils.UnprocessibleEntity("Invalid JSON body")
+		err := helper.UnprocessibleEntity("Invalid JSON body")
 		context.JSON(err.Status(), err)
 		return
 	}
@@ -104,7 +104,7 @@ func UpdateSocialMedia(context *gin.Context) {
 }
 
 func DeleteSocialMedia(context *gin.Context) {
-	socialMediaId, _ := utils.GetIdParam(context, "socialMediaId")
+	socialMediaId, _ := helper.GetIdParam(context, "socialMediaId")
 
 	err := service.SocialMediaService.DeleteSocialMedia(socialMediaId)
 

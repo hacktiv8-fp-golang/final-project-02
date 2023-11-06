@@ -3,7 +3,7 @@ package controller
 import (
 	"final-project-02/internal/model"
 	"final-project-02/internal/service"
-	"final-project-02/internal/utils"
+	"final-project-02/internal/helper"
 	"net/http"
 	"strconv"
 
@@ -102,7 +102,7 @@ func GetAllPhotos(context *gin.Context) {
 }
 
 func DeletePhoto(context *gin.Context) {
-	id, _ := utils.GetIdParam(context, "photoId")
+	id, _ := helper.GetIdParam(context, "photoId")
 
 	err := service.PhotoService.DeletePhoto(id)
 

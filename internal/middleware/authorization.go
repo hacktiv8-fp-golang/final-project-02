@@ -3,7 +3,7 @@ package middleware
 import (
 	"final-project-02/internal/database"
 	"final-project-02/internal/model"
-	"final-project-02/internal/utils"
+	"final-project-02/internal/helper"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 
 func PhotoAuthorization() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		photoId, err := utils.GetIdParam(context, "photoId")
+		photoId, err := helper.GetIdParam(context, "photoId")
 
 		if err != nil {
 			context.AbortWithStatusJSON(err.Status(), err)
@@ -26,13 +26,13 @@ func PhotoAuthorization() gin.HandlerFunc {
 
 		errMsg := db.Select("user_id").First(&photo, photoId).Error
 		if errMsg != nil {
-			err := utils.NotFound("Data not found")
+			err := helper.NotFound("Data not found")
 			context.AbortWithStatusJSON(err.Status(), err)
 			return
 		}
 
 		if photo.UserID != userID {
-			err := utils.Unautorized("You are not allowed to access this data")
+			err := helper.Unautorized("You are not allowed to access this data")
 			context.AbortWithStatusJSON(err.Status(), err)
 			return
 		}
@@ -43,7 +43,7 @@ func PhotoAuthorization() gin.HandlerFunc {
 
 func SocialMediaAuthorization() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		socialMediaId, err := utils.GetIdParam(context, "socialMediaId")
+		socialMediaId, err := helper.GetIdParam(context, "socialMediaId")
 
 		if err != nil {
 			context.AbortWithStatusJSON(err.Status(), err)
@@ -59,13 +59,13 @@ func SocialMediaAuthorization() gin.HandlerFunc {
 		errMsg := db.Select("user_id").First(&socialMedia, socialMediaId).Error
 		
 		if errMsg != nil {
-			err := utils.NotFound("Data not found")
+			err := helper.NotFound("Data not found")
 			context.AbortWithStatusJSON(err.Status(), err)
 			return
 		}
 
 		if socialMedia.UserID != userID {
-			err := utils.Unautorized("You are not allowed to access this data")
+			err := helper.Unautorized("You are not allowed to access this data")
 			context.AbortWithStatusJSON(err.Status(), err)
 			return
 		}
