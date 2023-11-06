@@ -15,7 +15,9 @@ func CreatePhoto(context *gin.Context) {
 	var photo model.Photo
 
 	if err := context.ShouldBindJSON(&photo); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, "Invalid JSON body")
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 
@@ -25,7 +27,7 @@ func CreatePhoto(context *gin.Context) {
 	result, err := service.PhotoService.CreatePhoto(&photo, userID)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 
@@ -43,7 +45,8 @@ func UpdatePhoto(context *gin.Context) {
 	var photo model.PhotoUpdate
 
 	if err := context.ShouldBindJSON(&photo); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, "Invalid JSON body")
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 
@@ -53,7 +56,7 @@ func UpdatePhoto(context *gin.Context) {
 	result, err := service.PhotoService.UpdatePhoto(&photo, photoID)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 
