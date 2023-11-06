@@ -14,8 +14,8 @@ func CreateSocialMedia(context *gin.Context) {
 	var socialMedia model.SocialMedia
 
 	if err := context.ShouldBindJSON(&socialMedia); err != nil {
-		err := helper.UnprocessibleEntity("Invalid JSON body")
-		context.JSON(err.Status(), err)
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 
@@ -82,8 +82,8 @@ func UpdateSocialMedia(context *gin.Context) {
 	var socialMediaUpdated model.SocialMediaUpdate
 
 	if err := context.ShouldBindJSON(&socialMediaUpdated); err != nil {
-		err := helper.UnprocessibleEntity("Invalid JSON body")
-		context.JSON(err.Status(), err)
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 

@@ -20,16 +20,14 @@ type socialMediaService struct{}
 var SocialMediaService socialMediaServiceRepo = &socialMediaService{}
 
 func (s *socialMediaService) CreateSocialMedia(socialMedia *model.SocialMedia) (*model.SocialMedia, helper.Error) {
-	_, err := govalidator.ValidateStruct(socialMedia)
-
-	if err != nil {
+	if _, err := govalidator.ValidateStruct(socialMedia); err != nil {
 		return nil, helper.BadRequest(err.Error())
 	}
 
-	socialMediaResponse, errorMessage := repository.SocialMediaRepo.CreateSocialMedia(socialMedia)
+	socialMediaResponse, err := repository.SocialMediaRepo.CreateSocialMedia(socialMedia)
 
-	if errorMessage != nil {
-		return nil, errorMessage
+	if err != nil {
+		return nil, err
 	}
 
 	return socialMediaResponse, nil
@@ -46,16 +44,14 @@ func (s *socialMediaService) GetAllSocialMedias(userId uint) ([]*model.SocialMed
 }
 
 func (s *socialMediaService) UpdateSocialMedia(socialMediaUpdated *model.SocialMediaUpdate, socialMediaId uint) (*model.SocialMedia, helper.Error) {
-	_, err := govalidator.ValidateStruct(socialMediaUpdated)
-
-	if err != nil {
+	if _, err := govalidator.ValidateStruct(socialMediaUpdated); err != nil {
 		return nil, helper.BadRequest(err.Error())
 	}
 
-	socialMedia, errorMessage := repository.SocialMediaRepo.UpdateSocialMedia(socialMediaUpdated, socialMediaId)
+	socialMedia, err := repository.SocialMediaRepo.UpdateSocialMedia(socialMediaUpdated, socialMediaId)
 
-	if errorMessage != nil {
-		return nil, errorMessage
+	if err != nil {
+		return nil, err
 	}
 
 	return socialMedia, nil
