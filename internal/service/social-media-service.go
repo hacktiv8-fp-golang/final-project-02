@@ -10,6 +10,7 @@ type socialMediaServiceRepo interface {
 	CreateSocialMedia(*model.SocialMedia) (*model.SocialMedia, utils.Error)
 	GetAllSocialMedias(uint) ([]*model.SocialMedia, utils.Error)
 	UpdateSocialMedia(*model.SocialMedia, uint) (*model.SocialMedia, utils.Error)
+	DeleteSocialMedia(uint) utils.Error
 }
 
 type socialMediaService struct{}
@@ -56,4 +57,14 @@ func (s *socialMediaService) UpdateSocialMedia(socialMediaUpdated *model.SocialM
 	}
 
 	return socialMedia, nil
+}
+
+func (s *socialMediaService) DeleteSocialMedia(socialMediaId uint) utils.Error {
+	err := repository.SocialMediaRepo.DeleteSocialMedia(socialMediaId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

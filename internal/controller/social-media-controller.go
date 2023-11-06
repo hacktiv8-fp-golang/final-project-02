@@ -108,3 +108,18 @@ func UpdateSocialMedia(context *gin.Context) {
 		"updated_at": socialMedia.UpdatedAt,
 	})
 }
+
+func DeleteSocialMedia(context *gin.Context) {
+	socialMediaId, _ := utils.GetIdParam(context, "socialMediaId")
+
+	err := service.SocialMediaService.DeleteSocialMedia(socialMediaId)
+
+	if err != nil {
+		context.JSON(err.Status(), err)
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Your social media has been successfully deleted",
+	})
+}

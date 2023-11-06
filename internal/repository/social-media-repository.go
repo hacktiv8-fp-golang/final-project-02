@@ -10,6 +10,7 @@ type socialMediaModelRepo interface {
 	CreateSocialMedia(*model.SocialMedia) (*model.SocialMedia, utils.Error)
 	GetAllSocialMedias(uint) ([]*model.SocialMedia, utils.Error)
 	UpdateSocialMedia(*model.SocialMedia, uint) (*model.SocialMedia, utils.Error)
+	DeleteSocialMedia(uint) utils.Error
 }
 
 type socialMediaRepo struct{}
@@ -58,4 +59,17 @@ func (s *socialMediaRepo) UpdateSocialMedia(socialMediaUpdated *model.SocialMedi
 	}
 
 	return &socialMedia, nil
+}
+
+func (s *socialMediaRepo) DeleteSocialMedia(socialMediaId uint) utils.Error {
+	db := database.GetDB()
+	var socialMedia model.SocialMedia
+	
+	err := db.Where("id = ?", socialMediaId).Delete(&socialMedia).Error
+
+	if err != nil {
+		return utils.ParseError(err)
+	}
+
+	return nil
 }

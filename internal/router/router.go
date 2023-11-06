@@ -43,7 +43,7 @@ func StartServer() {
 		socialMediaRouter.POST("/", controller.CreateSocialMedia)
 		socialMediaRouter.GET("/", controller.GetAllSocialMedias)
 		socialMediaRouter.PUT("/:socialMediaId",middleware.SocialMediaAuthorization(), controller.UpdateSocialMedia)
-		socialMediaRouter.DELETE("/:socialMediaId")
+		socialMediaRouter.DELETE("/:socialMediaId", middleware.SocialMediaAuthorization(), controller.DeleteSocialMedia)
 	}
 
 	router.Run(PORT)
