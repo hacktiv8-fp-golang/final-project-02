@@ -75,3 +75,36 @@ func GetAllSocialMedias(context *gin.Context) {
 		"social_medias": socialMediaMaps,
 	})
 }
+
+func UpdateSocialMedia(context *gin.Context) {
+	id, _ := utils.GetIdParam(context, "socialMediaId")
+
+	var socialMediaUpdated model.SocialMedia
+
+	if err := context.ShouldBindJSON(&socialMediaUpdated); err != nil {
+		err := utils.UnprocessibleEntity("Invalid JSON body")
+		context.JSON(err.Status(), err)
+		return
+	}
+
+	userData := context.MustGet("userData").(jwt.MapClaims)
+	userId := uint(userData["id"].(float64))
+
+	socialMediaUpdated.ID = id
+	socialMediaUpdated.UserID = userId
+
+	socialMedia, err := service.SocialMediaService.UpdateSocialMedia(&socialMediaUpdated, id)
+
+	if err != nil {
+		context.JSON(err.Status(), err)
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"id": socialMedia.ID,
+		"name": socialMedia.Name,
+		"social_media_url": socialMedia.SocialMediaURL,
+		"user_id": socialMedia.UserID,
+		"updated_at": socialMedia.UpdatedAt,
+	})
+}

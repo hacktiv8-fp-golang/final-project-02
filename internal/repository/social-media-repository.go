@@ -9,6 +9,7 @@ import (
 type socialMediaModelRepo interface {
 	CreateSocialMedia(*model.SocialMedia) (*model.SocialMedia, utils.Error)
 	GetAllSocialMedias(uint) ([]*model.SocialMedia, utils.Error)
+	UpdateSocialMedia(*model.SocialMedia, uint) (*model.SocialMedia, utils.Error)
 }
 
 type socialMediaRepo struct{}
@@ -43,4 +44,18 @@ func (s *socialMediaRepo) GetAllSocialMedias(userId uint) ([]*model.SocialMedia,
 	}
 
 	return socialMedia, nil
+}
+
+func (s *socialMediaRepo) UpdateSocialMedia(socialMediaUpdated *model.SocialMedia, socialMediaId uint) (*model.SocialMedia, utils.Error) {
+	var socialMedia model.SocialMedia
+
+	db := database.GetDB()
+
+	err := db.Model(&socialMedia).Where("id = ?", socialMediaId).Updates(socialMediaUpdated).Error
+
+	if err != nil {
+		return nil, utils.ParseError(err)
+	}
+
+	return &socialMedia, nil
 }

@@ -2,13 +2,14 @@ package service
 
 import (
 	"final-project-02/internal/model"
-	"final-project-02/internal/utils"
 	"final-project-02/internal/repository"
+	"final-project-02/internal/utils"
 )
 
 type socialMediaServiceRepo interface {
 	CreateSocialMedia(*model.SocialMedia) (*model.SocialMedia, utils.Error)
 	GetAllSocialMedias(uint) ([]*model.SocialMedia, utils.Error)
+	UpdateSocialMedia(*model.SocialMedia, uint) (*model.SocialMedia, utils.Error)
 }
 
 type socialMediaService struct{}
@@ -39,4 +40,20 @@ func (s *socialMediaService) GetAllSocialMedias(userId uint) ([]*model.SocialMed
 	}
 
 	return socialMedias, nil
+}
+
+func (s *socialMediaService) UpdateSocialMedia(socialMediaUpdated *model.SocialMedia, socialMediaId uint) (*model.SocialMedia, utils.Error) {
+	err := socialMediaUpdated.Validate()
+
+	if err != nil {
+		return nil, err
+	}
+
+	socialMedia, err := repository.SocialMediaRepo.UpdateSocialMedia(socialMediaUpdated, socialMediaId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return socialMedia, nil
 }

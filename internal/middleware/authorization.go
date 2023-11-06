@@ -40,3 +40,36 @@ func PhotoAuthorization() gin.HandlerFunc {
 		context.Next()
 	}
 }
+
+func SocialMediaAuthorization() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		socialMediaId, err := utils.GetIdParam(context, "socialMediaId")
+
+		if err != nil {
+			context.AbortWithStatusJSON(err.Status(), err)
+			return
+		}
+
+		userData := context.MustGet("userData").(jwt.MapClaims)
+		userID := uint(userData["id"].(float64))
+
+		db := database.GetDB()
+		socialMedia := model.SocialMedia{}
+
+		errMsg := db.Select("user_id").First(&socialMedia, socialMediaId).Error
+		
+		if errMsg != nil {
+			err := utils.NotFound("Data not found")
+			context.AbortWithStatusJSON(err.Status(), err)
+			return
+		}
+
+		if socialMedia.UserID != userID {
+			err := utils.Unautorized("You are not allowed to access this data")
+			context.AbortWithStatusJSON(err.Status(), err)
+			return
+		}
+
+		context.Next()
+	}
+}
