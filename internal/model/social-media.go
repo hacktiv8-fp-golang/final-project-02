@@ -1,11 +1,6 @@
 package model
 
-import (
-	"final-project-02/internal/utils"
-	"time"
-
-	"github.com/asaskevich/govalidator"
-)
+import "time"
 
 type SocialMedia struct {
 	ID             uint      `json:"id,omitempty" gorm:"primaryKey" `
@@ -17,12 +12,12 @@ type SocialMedia struct {
 	User *User
 }
 
-func (socialMedia *SocialMedia) Validate() utils.Error {
-	_, err := govalidator.ValidateStruct(socialMedia)
+type SocialMediaCreate struct {
+	Name           string    `json:"name" gorm:"not null" valid:"required~Name is required"`
+	SocialMediaURL string    `json:"social_media_url" gorm:"not null" valid:"required~Social media url is required"`
+}
 
-	if err != nil {
-		return utils.BadRequest(err.Error())
-	}
-
-	return nil
+type SocialMediaUpdate struct {
+	Name           string    `json:"name" gorm:"not null" valid:"required~Name is required"`
+	SocialMediaURL string    `json:"social_media_url" gorm:"not null" valid:"required~Social media url is required"`
 }

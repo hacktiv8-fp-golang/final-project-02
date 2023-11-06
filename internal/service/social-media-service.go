@@ -4,12 +4,14 @@ import (
 	"final-project-02/internal/model"
 	"final-project-02/internal/repository"
 	"final-project-02/internal/utils"
+
+	"github.com/asaskevich/govalidator"
 )
 
 type socialMediaServiceRepo interface {
 	CreateSocialMedia(*model.SocialMedia) (*model.SocialMedia, utils.Error)
 	GetAllSocialMedias(uint) ([]*model.SocialMedia, utils.Error)
-	UpdateSocialMedia(*model.SocialMedia, uint) (*model.SocialMedia, utils.Error)
+	UpdateSocialMedia(*model.SocialMediaUpdate, uint) (*model.SocialMedia, utils.Error)
 	DeleteSocialMedia(uint) utils.Error
 }
 
@@ -18,16 +20,16 @@ type socialMediaService struct{}
 var SocialMediaService socialMediaServiceRepo = &socialMediaService{}
 
 func (s *socialMediaService) CreateSocialMedia(socialMedia *model.SocialMedia) (*model.SocialMedia, utils.Error) {
-	err := socialMedia.Validate()
+	_, err := govalidator.ValidateStruct(socialMedia)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.BadRequest(err.Error())
 	}
 
-	socialMediaResponse, err := repository.SocialMediaRepo.CreateSocialMedia(socialMedia)
+	socialMediaResponse, errorMessage := repository.SocialMediaRepo.CreateSocialMedia(socialMedia)
 
-	if err != nil {
-		return nil, err
+	if errorMessage != nil {
+		return nil, errorMessage
 	}
 
 	return socialMediaResponse, nil
@@ -43,17 +45,17 @@ func (s *socialMediaService) GetAllSocialMedias(userId uint) ([]*model.SocialMed
 	return socialMedias, nil
 }
 
-func (s *socialMediaService) UpdateSocialMedia(socialMediaUpdated *model.SocialMedia, socialMediaId uint) (*model.SocialMedia, utils.Error) {
-	err := socialMediaUpdated.Validate()
+func (s *socialMediaService) UpdateSocialMedia(socialMediaUpdated *model.SocialMediaUpdate, socialMediaId uint) (*model.SocialMedia, utils.Error) {
+	_, err := govalidator.ValidateStruct(socialMediaUpdated)
 
 	if err != nil {
-		return nil, err
+		return nil, utils.BadRequest(err.Error())
 	}
 
-	socialMedia, err := repository.SocialMediaRepo.UpdateSocialMedia(socialMediaUpdated, socialMediaId)
+	socialMedia, errorMessage := repository.SocialMediaRepo.UpdateSocialMedia(socialMediaUpdated, socialMediaId)
 
-	if err != nil {
-		return nil, err
+	if errorMessage != nil {
+		return nil, errorMessage
 	}
 
 	return socialMedia, nil

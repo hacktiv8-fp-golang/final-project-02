@@ -79,19 +79,13 @@ func GetAllSocialMedias(context *gin.Context) {
 func UpdateSocialMedia(context *gin.Context) {
 	id, _ := utils.GetIdParam(context, "socialMediaId")
 
-	var socialMediaUpdated model.SocialMedia
+	var socialMediaUpdated model.SocialMediaUpdate
 
 	if err := context.ShouldBindJSON(&socialMediaUpdated); err != nil {
 		err := utils.UnprocessibleEntity("Invalid JSON body")
 		context.JSON(err.Status(), err)
 		return
 	}
-
-	userData := context.MustGet("userData").(jwt.MapClaims)
-	userId := uint(userData["id"].(float64))
-
-	socialMediaUpdated.ID = id
-	socialMediaUpdated.UserID = userId
 
 	socialMedia, err := service.SocialMediaService.UpdateSocialMedia(&socialMediaUpdated, id)
 

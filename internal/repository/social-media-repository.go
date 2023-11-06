@@ -9,7 +9,7 @@ import (
 type socialMediaModelRepo interface {
 	CreateSocialMedia(*model.SocialMedia) (*model.SocialMedia, utils.Error)
 	GetAllSocialMedias(uint) ([]*model.SocialMedia, utils.Error)
-	UpdateSocialMedia(*model.SocialMedia, uint) (*model.SocialMedia, utils.Error)
+	UpdateSocialMedia(*model.SocialMediaUpdate, uint) (*model.SocialMedia, utils.Error)
 	DeleteSocialMedia(uint) utils.Error
 }
 
@@ -30,9 +30,8 @@ func (s *socialMediaRepo) CreateSocialMedia(socialMedia *model.SocialMedia) (*mo
 }
 
 func (s *socialMediaRepo) GetAllSocialMedias(userId uint) ([]*model.SocialMedia, utils.Error) {
-	var socialMedia []*model.SocialMedia
-
 	db := database.GetDB()
+	var socialMedia []*model.SocialMedia
 
 	err := db.Preload("User").Where("user_id", userId).Find(&socialMedia).Error
 
@@ -47,16 +46,17 @@ func (s *socialMediaRepo) GetAllSocialMedias(userId uint) ([]*model.SocialMedia,
 	return socialMedia, nil
 }
 
-func (s *socialMediaRepo) UpdateSocialMedia(socialMediaUpdated *model.SocialMedia, socialMediaId uint) (*model.SocialMedia, utils.Error) {
+func (s *socialMediaRepo) UpdateSocialMedia(socialMediaUpdated *model.SocialMediaUpdate, socialMediaId uint) (*model.SocialMedia, utils.Error) {
+	db := database.GetDB()
 	var socialMedia model.SocialMedia
 
-	db := database.GetDB()
-
-	err := db.Model(&socialMedia).Where("id = ?", socialMediaId).Updates(socialMediaUpdated).Error
+	err := db.First(&socialMedia, socialMediaId).Error
 
 	if err != nil {
 		return nil, utils.ParseError(err)
 	}
+
+	db.Model(&socialMedia).Updates(socialMediaUpdated)
 
 	return &socialMedia, nil
 }
