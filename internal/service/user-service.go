@@ -9,24 +9,25 @@ import (
 )
 
 type userServiceRepo interface {
-	Register(*model.User) (*model.User, error)
-	Login(*model.LoginCredential) (string, error)
+	Register(*model.User) (*model.User, helper.Error)
+	Login(*model.LoginCredential) (string, helper.Error)
 }
 
 type userService struct{}
 
 var UserService userServiceRepo = &userService{}
 
-func (t *userService) Register(user *model.User) (*model.User, error) {
+func (t *userService) Register(user *model.User) (*model.User, helper.Error) {
 	if _, err := govalidator.ValidateStruct(user); err != nil {
-		return nil, err
+		return nil, helper.BadRequest(err.Error())
 	}
 
-	var err error
-	user.Password, err = helper.HashPass(user.Password)
+	password, err := helper.HashPass(user.Password)
 	if err != nil {
 		return nil, err
 	}
+
+	user.Password = password
 
 	result, err := repository.UserModel.Register(user)
 	if err != nil {
@@ -36,9 +37,9 @@ func (t *userService) Register(user *model.User) (*model.User, error) {
 	return result, nil
 }
 
-func (t *userService) Login(login *model.LoginCredential) (string, error) {
+func (t *userService) Login(login *model.LoginCredential) (string, helper.Error) {
 	if _, err := govalidator.ValidateStruct(login); err != nil {
-		return "", err
+		return "", helper.BadRequest(err.Error())
 	}
 
 	user, err := repository.UserModel.Login(login)
@@ -47,7 +48,7 @@ func (t *userService) Login(login *model.LoginCredential) (string, error) {
 	}
 
 	if isPasswordCorrect := helper.ComparePass(user.Password, login.Password); !isPasswordCorrect {
-		return "", err
+		return "", helper.Unautorized("Invalid email/password")
 	}
 
 	token, err := helper.GenerateToken(user.ID, user.Email)
