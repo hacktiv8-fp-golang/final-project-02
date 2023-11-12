@@ -3,6 +3,7 @@ package controller
 import (
 	"final-project-02/internal/model"
 	"final-project-02/internal/service"
+	"final-project-02/internal/helper"
 	"net/http"
 	"strconv"
 
@@ -14,7 +15,9 @@ func CreatePhoto(context *gin.Context) {
 	var photo model.Photo
 
 	if err := context.ShouldBindJSON(&photo); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, "Invalid JSON body")
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 
@@ -24,7 +27,7 @@ func CreatePhoto(context *gin.Context) {
 	result, err := service.PhotoService.CreatePhoto(&photo, userID)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 
@@ -42,7 +45,8 @@ func UpdatePhoto(context *gin.Context) {
 	var photo model.PhotoUpdate
 
 	if err := context.ShouldBindJSON(&photo); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, "Invalid JSON body")
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 
@@ -52,7 +56,7 @@ func UpdatePhoto(context *gin.Context) {
 	result, err := service.PhotoService.UpdatePhoto(&photo, photoID)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 
@@ -63,5 +67,54 @@ func UpdatePhoto(context *gin.Context) {
 		"photo_url":  result.PhotoURL,
 		"user_id":    result.UserID,
 		"updated_at": result.CreatedAt,
+	})
+}
+
+func GetAllPhotos(context *gin.Context) {
+	userData := context.MustGet("userData").(jwt.MapClaims)
+	userId := uint(userData["id"].(float64))
+
+	photos, err := service.PhotoService.GetAllPhotos(userId)
+
+	if err != nil {
+		context.JSON(err.Status(), err)
+		return
+	}
+
+	var photoMaps []map[string]interface{}
+
+	for _, photo := range photos {
+		photoMap := map[string]interface{}{
+			"id":         photo.ID,
+			"title":      photo.Title,
+			"caption":    photo.Caption,
+			"photo_url":  photo.PhotoURL,
+			"user_id":    photo.UserID,
+			"created_at": photo.CreatedAt,
+			"updated_at": photo.UpdatedAt,
+			"User": 			map[string]interface{}{
+				"email":    photo.User.Email,
+				"username": photo.User.Username,
+			},
+		}
+
+		photoMaps = append(photoMaps, photoMap)
+	}
+
+	context.JSON(http.StatusOK, photoMaps)
+}
+
+func DeletePhoto(context *gin.Context) {
+	id, _ := helper.GetIdParam(context, "photoId")
+
+	err := service.PhotoService.DeletePhoto(id)
+
+	if err != nil {
+		context.JSON(err.Status(), err)
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{
+		"message": "Your photo has been successfully deleted",
 	})
 }

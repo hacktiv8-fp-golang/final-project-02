@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"final-project-02/internal/helper"
 	"final-project-02/internal/model"
 	"final-project-02/internal/service"
 	"net/http"
@@ -12,14 +13,16 @@ func Register(context *gin.Context) {
 	var user model.User
 
 	if err := context.ShouldBindJSON(&user); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, "Invalid JSON body")
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 
 	result, err := service.UserService.Register(&user)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 
@@ -35,14 +38,16 @@ func Login(context *gin.Context) {
 	var user model.LoginCredential
 
 	if err := context.ShouldBindJSON(&user); err != nil {
-		context.JSON(http.StatusUnprocessableEntity, "Invalid JSON body")
+		errorHandler := helper.UnprocessibleEntity("Invalid JSON body")
+
+		context.JSON(errorHandler.Status(), errorHandler)
 		return
 	}
 
 	result, err := service.UserService.Login(&user)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, err.Error())
+		context.JSON(err.Status(), err)
 		return
 	}
 

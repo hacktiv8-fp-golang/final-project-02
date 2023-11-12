@@ -24,9 +24,9 @@ func StartServer() {
 	{
 		photoRouter.Use(middleware.Authentication())
 		photoRouter.POST("/", controller.CreatePhoto)
-		photoRouter.GET("/")
+		photoRouter.GET("/", controller.GetAllPhotos)
 		photoRouter.PUT("/:photoId", middleware.PhotoAuthorization(), controller.UpdatePhoto)
-		photoRouter.DELETE("/:photoId")
+		photoRouter.DELETE("/:photoId", middleware.PhotoAuthorization(), controller.DeletePhoto)
 	}
 
 	commentRouter := router.Group("/comments")
@@ -39,10 +39,11 @@ func StartServer() {
 
 	socialMediaRouter := router.Group("/socialmedias")
 	{
-		socialMediaRouter.POST("/")
-		socialMediaRouter.GET("/")
-		socialMediaRouter.PUT("/:socialMediaId")
-		socialMediaRouter.DELETE("/:socialMediaId")
+		socialMediaRouter.Use(middleware.Authentication())
+		socialMediaRouter.POST("/", controller.CreateSocialMedia)
+		socialMediaRouter.GET("/", controller.GetAllSocialMedias)
+		socialMediaRouter.PUT("/:socialMediaId",middleware.SocialMediaAuthorization(), controller.UpdateSocialMedia)
+		socialMediaRouter.DELETE("/:socialMediaId", middleware.SocialMediaAuthorization(), controller.DeleteSocialMedia)
 	}
 
 	router.Run(PORT)

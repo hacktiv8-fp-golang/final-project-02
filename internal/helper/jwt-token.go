@@ -10,7 +10,7 @@ import (
 
 var secretKey = "seed"
 
-func GenerateToken(id uint, email string) (string, error) {
+func GenerateToken(id uint, email string) (string, Error) {
 	claims := jwt.MapClaims{
 		"id":    id,
 		"email": email,
@@ -20,7 +20,7 @@ func GenerateToken(id uint, email string) (string, error) {
 
 	signedToken, err := parseToken.SignedString([]byte(secretKey))
 	if err != nil {
-		return "", nil
+		return "", InternalServerError("Failed to generate token")
 	}
 
 	return signedToken, nil

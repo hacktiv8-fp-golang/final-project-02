@@ -1,26 +1,23 @@
 package model
 
-import (
-	"time"
-
-	"github.com/asaskevich/govalidator"
-)
+import "time"
 
 type SocialMedia struct {
-	ID             uint      `json:"id" gorm:"primaryKey" `
-	Name           string    `json:"name" gorm:"not null" valid:"required"`
-	SocialMediaURL string    `json:"social_media_url" gorm:"not null" valid:"required"`
+	ID             uint      `json:"id,omitempty" gorm:"primaryKey" `
+	Name           string    `json:"name" gorm:"not null" valid:"required~Name is required"`
+	SocialMediaURL string    `json:"social_media_url" gorm:"not null" valid:"required~Social media url is required"`
 	UserID         uint      `json:"user_id"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
+	User *User
 }
 
-func (socialMedia *SocialMedia) Validate() error {
-	_, err := govalidator.ValidateStruct(socialMedia)
+type SocialMediaCreate struct {
+	Name           string    `json:"name" gorm:"not null" valid:"required~Name is required"`
+	SocialMediaURL string    `json:"social_media_url" gorm:"not null" valid:"required~Social media url is required"`
+}
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+type SocialMediaUpdate struct {
+	Name           string    `json:"name" gorm:"not null" valid:"required~Name is required"`
+	SocialMediaURL string    `json:"social_media_url" gorm:"not null" valid:"required~Social media url is required"`
 }
