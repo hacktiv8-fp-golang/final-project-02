@@ -9,6 +9,8 @@ import (
 type userModelRepo interface {
 	Register(*model.User) (*model.User, helper.Error)
 	Login(*model.LoginCredential) (*model.User, helper.Error)
+	UpdateUser(userID uint, update *model.UserUpdate) (*model.User, helper.Error)
+	DeleteUser(userID uint) (*model.User, helper.Error)
 }
 
 type userModel struct{}
@@ -36,6 +38,47 @@ func (t *userModel) Login(login *model.LoginCredential) (*model.User, helper.Err
 	if err != nil {
 		return nil, helper.Unautorized("Invalid email/password")
 	}
+
+	return &user, nil
+}
+
+func (t *userModel) UpdateUser(userID uint, update *model.UserUpdate) (*model.User, helper.Error){
+	db := database.GetDB()
+
+	var user model.User
+	err := db.First(&user, userID).Error
+
+	if err != nil {
+		return nil, helper.ParseError(err)
+	}
+
+	if update.Email != "" {
+		user.Email = update.Email
+	}
+	if update.Username != "" {
+		user.Username = update.Username
+	}
+
+	err = db.Save(&user).Error
+
+  if err != nil {
+		return nil, helper.ParseError(err)
+	}
+
+	return &user, nil
+}
+
+func (t *userModel) DeleteUser(userID uint) (*model.User, helper.Error) {
+	db := database.GetDB()
+
+	var user model.User
+	err := db.First(&user, userID).Error
+
+	if err != nil {
+		return nil, helper.ParseError(err)
+	}
+
+	db.Delete(&user)
 
 	return &user, nil
 }

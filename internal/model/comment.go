@@ -13,6 +13,12 @@ type Comment struct {
 	PhotoID   uint      `json:"photo_id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	User      *User
+	Photo     *Photo
+}
+
+type CommentUpdate struct {
+	Message   string    `json:"message" gorm:"not null"`
 }
 
 func (comment *Comment) Validate() error {
