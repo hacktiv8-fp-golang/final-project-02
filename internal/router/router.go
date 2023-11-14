@@ -16,8 +16,8 @@ func StartServer() {
 	{
 		userRouter.POST("/register", controller.Register)
 		userRouter.POST("/login", controller.Login)
-		userRouter.PUT("/")
-		userRouter.DELETE("/")
+		userRouter.PUT("/",middleware.Authentication(), controller.UpdateUser)
+		userRouter.DELETE("/",middleware.Authentication(), controller.DeleteUser)
 	}
 
 	photoRouter := router.Group("/photos")
@@ -31,10 +31,11 @@ func StartServer() {
 
 	commentRouter := router.Group("/comments")
 	{
-		commentRouter.POST("/")
-		commentRouter.GET("/")
-		commentRouter.PUT("/:commentId")
-		commentRouter.DELETE("/:commentId")
+		commentRouter.Use(middleware.Authentication())
+		commentRouter.POST("/",controller.CreateComment)
+		commentRouter.GET("/",controller.GetComment)
+		commentRouter.PUT("/:commentId", middleware.CommentAuthorization(),controller.UpdateComment)
+		commentRouter.DELETE("/:commentId",middleware.CommentAuthorization(),controller.DeleteComment)
 	}
 
 	socialMediaRouter := router.Group("/socialmedias")

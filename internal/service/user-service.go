@@ -11,6 +11,8 @@ import (
 type userServiceRepo interface {
 	Register(*model.User) (*model.User, helper.Error)
 	Login(*model.LoginCredential) (string, helper.Error)
+	UpdateUser(userID uint, update *model.UserUpdate) (*model.User, helper.Error)
+	DeleteUser(userID uint) (*model.User, helper.Error)
 }
 
 type userService struct{}
@@ -58,3 +60,28 @@ func (t *userService) Login(login *model.LoginCredential) (string, helper.Error)
 
 	return token, nil
 }
+
+func (t *userService) UpdateUser(userID uint, update *model.UserUpdate) (*model.User, helper.Error) {
+	if _, err := govalidator.ValidateStruct(update); err != nil {
+		return nil, helper.BadRequest(err.Error())
+	}
+
+	updatedUser, err := repository.UserModel.UpdateUser(userID, update)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedUser, nil
+}
+
+func (t *userService) DeleteUser(userID uint) (*model.User, helper.Error) {
+	Result, err := repository.UserModel.DeleteUser(userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return Result, nil
+}
+
