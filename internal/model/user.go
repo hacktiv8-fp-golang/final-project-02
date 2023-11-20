@@ -18,9 +18,8 @@ type User struct {
 }
 
 type UserUpdate struct {
-	Email    string `gorm:"not null;unique" json:"email" valid:"email"`
-	Username string `gorm:"not null;unique" json:"username"`
-	Age      int    `gorm:"not null" json:"age" valid:"minstringlength(8|150)"`
+	Email    string `gorm:"not null;unique" json:"email" valid:"required,email"`
+	Username string `gorm:"not null;unique" json:"username" valid:"required"`
 }
 
 type LoginCredential struct {
