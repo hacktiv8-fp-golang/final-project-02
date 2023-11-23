@@ -18,7 +18,7 @@ type Comment struct {
 }
 
 type CommentUpdate struct {
-	Message   string    `json:"message" gorm:"not null"`
+	Message string `json:"message" gorm:"not null" valid:"required"`
 }
 
 func (comment *Comment) Validate() error {
