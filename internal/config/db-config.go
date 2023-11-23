@@ -12,7 +12,7 @@ func GetDBConfig() string {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Fatal("error loading .env file")
+		log.Println("error loading .env file")
 	}
 
 	host := os.Getenv("DB_HOST")

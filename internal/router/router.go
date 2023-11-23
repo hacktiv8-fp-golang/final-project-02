@@ -3,11 +3,10 @@ package router
 import (
 	"final-project-02/internal/controller"
 	"final-project-02/internal/middleware"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
-
-var PORT = ":8080"
 
 func StartServer() {
 	router := gin.Default()
@@ -47,5 +46,7 @@ func StartServer() {
 		socialMediaRouter.DELETE("/:socialMediaId", middleware.SocialMediaAuthorization(), controller.DeleteSocialMedia)
 	}
 
-	router.Run(PORT)
+	var PORT = os.Getenv("PORT")
+
+	router.Run(":" +PORT)
 }
