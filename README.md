@@ -23,8 +23,12 @@
   DB_PORT=Database port (example: 5432)
   DB_NAME=Name of the database to be used (example: "database name")
   DB_SSLMODE=Database SSL mode (example: disable)
+  PORT=Port for the server to run on (example: 8080)
 ```
 5. Run the project
 ```sh
   go run main.go
 ```
+
+## Deployment
+The API has been deployed and can be accessed [here](https://final-project-02-production.up.railway.app/).
