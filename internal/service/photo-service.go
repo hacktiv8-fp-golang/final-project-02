@@ -1,9 +1,9 @@
 package service
 
 import (
-	"final-project-02/internal/model"
-	"final-project-02/internal/repository"
-	"final-project-02/internal/helper"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/model"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/repository"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/helper"
 
 	"github.com/asaskevich/govalidator"
 )

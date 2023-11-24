@@ -1,8 +1,8 @@
 package router
 
 import (
-	"final-project-02/internal/controller"
-	"final-project-02/internal/middleware"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/controller"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/middleware"
 	"os"
 
 	"github.com/gin-gonic/gin"

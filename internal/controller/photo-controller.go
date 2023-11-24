@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"final-project-02/internal/model"
-	"final-project-02/internal/service"
-	"final-project-02/internal/helper"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/model"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/service"
+	"github.com/hacktiv8-fp-golang/final-project-02/internal/helper"
 	"net/http"
 	"strconv"
 
